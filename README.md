@@ -1,2 +1,2 @@
 # connect4
-A minimax connect4 algorithm
+a minimax connect4 algorithm
