@@ -6,6 +6,24 @@ Module.onRuntimeInitialized = () => {
   console.log('Game module loaded!');
 };
 
+// Intercept standard output
+Module.print = (text) => {
+  appendOutput(text);
+};
+
+// Optional: Intercept standard error (e.g., for debugging)
+Module.printErr = (text) => {
+  appendOutput(`[ERROR] ${text}`);
+};
+
+// Function to append output to the webpage
+function appendOutput(text) {
+  const outputDiv = document.getElementById('output');
+  const line = document.createElement('div');
+  line.textContent = text;
+  outputDiv.appendChild(line);
+}
+
 function executeCommand(command) {
   if (command === 'play') {
     if (gameLoaded) {
