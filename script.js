@@ -1,11 +1,20 @@
-const output = document.getElementById('output');
-const commandInput = document.getElementById('command');
+let gameLoaded = false;
+
+// Initialize WebAssembly Module
+Module.onRuntimeInitialized = () => {
+  gameLoaded = true;
+  console.log('Game module loaded!');
+};
 
 function executeCommand(command) {
-  if (command === 'help') {
-    appendOutput('Available commands:\n- help: Show this help message\n- play: Play connect 4\n- hello: Say hello\n- clear: Clear the console');
-  } else if (command === 'hello') {
-    appendOutput('Hello, user!');
+  if (command === 'play') {
+    if (gameLoaded) {
+      Module._main(); // Call the C program's main function
+    } else {
+      appendOutput('Game is still loading. Please wait...');
+    }
+  } else if (command === 'help') {
+    appendOutput('Available commands:\n- play: Start the game\n- help: Show help\n- clear: Clear the console');
   } else if (command === 'clear') {
     output.innerHTML = '';
   } else {
