@@ -46,10 +46,14 @@ function appendOutput(text) {
   output.appendChild(line);
 }
 
-commandInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    const command = commandInput.value.trim();
-    executeCommand(command);
-    commandInput.value = ''; // Clear the input
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  const commandInput = document.getElementById('command');
+  commandInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      const command = commandInput.value.trim();
+      executeCommand(command);
+      commandInput.value = ''; // Clear the input
+    }
+  });
 });
+
