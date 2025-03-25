@@ -1,3 +1,4 @@
+/* Terminal Container */
 #terminal {
     background-color: black;
     color: green;
@@ -8,7 +9,7 @@
     overflow-y: auto;
     border: 2px solid green;
     margin: 20px auto;
-    display: block; /* Ensure the terminal is displayed */
+    display: block;
 }
 
 /* Input Field */
@@ -19,4 +20,20 @@
     padding: 10px;
     font-family: monospace;
     font-size: 16px;
+}
+
+/* Submit Button */
+#submit-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    font-family: monospace;
+    background-color: green;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+#submit-btn:hover {
+    background-color: darkgreen;
 }
