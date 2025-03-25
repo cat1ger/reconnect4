@@ -23,7 +23,7 @@
         Module = {
             onRuntimeInitialized: () => {
                 console.log("Emscripten runtime initialized.");
-                Module.callMain(); // Start the game logic
+                Module._main(); // Start the game logic
             },
             print: (text) => appendToTerminal(text), // Redirect stdout
             printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`), // Redirect stderr
