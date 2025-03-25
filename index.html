@@ -17,7 +17,9 @@
             terminal.innerHTML += `<div>${message}</div>`;
             terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
         }
-
+    </script>
+    <script src="connect4.js"></script>
+    <script>
         Module = {
             onRuntimeInitialized: () => {
                 console.log("Emscripten runtime initialized.");
@@ -26,9 +28,7 @@
             print: (text) => appendToTerminal(text), // Redirect stdout to terminal
             printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`), // Redirect stderr
         };
-    </script>
-    <script src="connect4.js"></script>
-    <script>
+        
         document.addEventListener("DOMContentLoaded", () => {
             function processInput(userInput) {
                 console.log("Processing input:", userInput);
