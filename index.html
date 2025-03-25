@@ -4,54 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reconnect4</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS -->
 </head>
 <body>
-    <!-- Terminal Styled Interface -->
+    <!-- Terminal-Styled Interface -->
     <div id="terminal"></div>
-    
-    <!-- Input Field -->
-    <input id="user-input" type="text" placeholder="Type here..." />
 
-    <!-- Emscripten-generated JavaScript -->
+    <!-- Input Field and Submit Button -->
+    <input id="user-input" type="text" placeholder="Type your move..." />
+
+    <!-- Load Emscripten-Generated JavaScript -->
     <script src="connect4.js"></script>
 
     <!-- Module Configuration -->
     <script>
+        // Configuration for the Emscripten runtime
         Module = {
             onRuntimeInitialized: () => {
                 console.log("Emscripten runtime initialized.");
-                Module.callMain(); // Start the main function in your C program
+                Module.callMain(); // Start the game logic
             },
-            print: (text) => {
-                appendToTerminal(text); // Redirect stdout to terminal
-            },
-            printErr: (text) => {
-                appendToTerminal(`<span style="color: red;">${text}</span>`); // Redirect stderr
-            },
+            print: (text) => appendToTerminal(text), // Redirect stdout to terminal UI
+            printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`), // Redirect stderr
         };
     </script>
 
-    <!-- Terminal and Input Handling -->
+    <!-- Terminal and Input Handling Logic -->
     <script>
+        // Function to append messages to the terminal
         function appendToTerminal(message) {
             const terminal = document.getElementById('terminal');
-            terminal.innerHTML += `<div>${message}</div>`; // Display output in terminal
+            terminal.innerHTML += `<div>${message}</div>`;
             terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
         }
 
+        // Function to process user input and redirect to stdin
         function processInput(userInput) {
-            console.log("Processing input:", userInput);
-            FS.writeFile('/dev/stdin', userInput + '\n'); // Simulate stdin in Emscripten
+            console.log("Processing user input:", userInput);
+            FS.writeFile('/dev/stdin', userInput + '\n'); // Redirect input to stdin
         }
 
-        // Event Listener for User Input
+        // Attach event listener for input field (Enter key submission)
         document.getElementById('user-input').addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
                 const userInput = event.target.value;
-                processInput(userInput); // Pass input to your game
+                processInput(userInput); // Process user input
                 event.target.value = ''; // Clear input field
             }
+        });
+
+        // Attach event listener for submit button
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const userInput = document.getElementById('user-input').value;
+            processInput(userInput);
+            document.getElementById('user-input').value = ''; // Clear input field
         });
     </script>
 </body>
