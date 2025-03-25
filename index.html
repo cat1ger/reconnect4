@@ -11,3 +11,17 @@
     <script src="index.js"></script>
 </body>
 </html>
+<script>
+    fetch('game.wasm').then(response =>
+        response.arrayBuffer()
+    ).then(bytes =>
+        WebAssembly.instantiate(bytes, {})
+    ).then(result => {
+        const instance = result.instance;
+    });
+</script>
+<script src="game.js"></script>
+<script>
+    Module.onRuntimeInitialized = () => {
+    };
+</script>
