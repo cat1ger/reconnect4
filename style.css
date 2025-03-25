@@ -1,10 +1,38 @@
+/* Terminal Container */
 #terminal {
     background-color: black;
-    color: white;
+    color: green;
     font-family: monospace;
-    padding: 20px;
-    width: 80%;
-    height: 500px;
+    padding: 10px;
+    width: 90%;
+    height: 400px;
     overflow-y: auto;
-    margin: auto;
+    border: 2px solid green;
+    margin: 20px auto;
+}
+
+/* Input Field */
+#user-input {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+/* Submit Button */
+#submit-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    font-family: monospace;
+    background-color: green;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+#submit-btn:hover {
+    background-color: darkgreen;
 }
