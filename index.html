@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="terminal"></div>
+    <input id="user-input" type="text" placeholder="Type here..." />
+    <button id="submit-btn">Submit</button>
+
+    <script src="connect4.js"></script>
+    <script>
+        Module = {
+            onRuntimeInitialized: () => {
+                Module.callMain(); // Start the program
+            },
+            print: (text) => appendToTerminal(text),
+            printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`),
+        };
+
+        function appendToTerminal(message) {
+            const terminal = document.getElementById('terminal');
+            terminal.innerHTML += `<div>${message}</div>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function processInput(userInput) {
+            FS.writeFile('/dev/stdin', userInput + '\n');
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const userInput = event.target.value;
+                processInput(userInput);
+                event.target.value = ''; // Clear input field
+            }
+        });
+    </script>
+</body>
+</html>
