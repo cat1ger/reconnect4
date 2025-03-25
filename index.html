@@ -3,38 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Game</title>
+    <title>reconnect4</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Terminal Styled Interface -->
     <div id="terminal"></div>
+    
+    <!-- Input Field -->
     <input id="user-input" type="text" placeholder="Type here..." />
-    <button id="submit-btn">Submit</button>
 
+    <!-- Emscripten-generated JavaScript -->
     <script src="connect4.js"></script>
+
+    <!-- Module Configuration -->
     <script>
         Module = {
             onRuntimeInitialized: () => {
-                Module.callMain(); // Start the program
+                console.log("Emscripten runtime initialized.");
+                Module.callMain(); // Start the main function in your C program
             },
-            print: (text) => appendToTerminal(text),
-            printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`),
+            print: (text) => {
+                appendToTerminal(text); // Redirect stdout to terminal
+            },
+            printErr: (text) => {
+                appendToTerminal(`<span style="color: red;">${text}</span>`); // Redirect stderr
+            },
         };
+    </script>
 
+    <!-- Terminal and Input Handling -->
+    <script>
         function appendToTerminal(message) {
             const terminal = document.getElementById('terminal');
-            terminal.innerHTML += `<div>${message}</div>`;
-            terminal.scrollTop = terminal.scrollHeight;
+            terminal.innerHTML += `<div>${message}</div>`; // Display output in terminal
+            terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
         }
 
         function processInput(userInput) {
-            FS.writeFile('/dev/stdin', userInput + '\n');
+            console.log("Processing input:", userInput);
+            FS.writeFile('/dev/stdin', userInput + '\n'); // Simulate stdin in Emscripten
         }
 
+        // Event Listener for User Input
         document.getElementById('user-input').addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
                 const userInput = event.target.value;
-                processInput(userInput);
+                processInput(userInput); // Pass input to your game
                 event.target.value = ''; // Clear input field
             }
         });
