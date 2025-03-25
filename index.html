@@ -4,60 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reconnect4</title>
-    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Terminal-Styled Interface -->
     <div id="terminal"></div>
-
-    <!-- Input Field -->
     <input id="user-input" type="text" placeholder="Type your move..." />
+    <button id="submit-btn">Submit</button>
 
-    <!-- Load Emscripten-Generated JavaScript -->
-    <script src="connect4.js"></script>
-
-    <!-- Module Configuration -->
     <script>
-        // Configuration for the Emscripten runtime
-        Module = {
-            onRuntimeInitialized: () => {
-                console.log("Emscripten runtime initialized.");
-                Module.callMain(); // Start the game logic
-            },
-            print: (text) => appendToTerminal(text), // Redirect stdout to terminal UI
-            printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`), // Redirect stderr
-        };
-    </script>
-
-    <!-- Terminal and Input Handling Logic -->
-    <script>
-        // Function to append messages to the terminal
+        // Define the global appendToTerminal function
         function appendToTerminal(message) {
             const terminal = document.getElementById('terminal');
             terminal.innerHTML += `<div>${message}</div>`;
-            terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
+            terminal.scrollTop = terminal.scrollHeight;
         }
 
-        // Function to process user input and redirect to stdin
-        function processInput(userInput) {
-            console.log("Processing user input:", userInput);
-            FS.writeFile('/dev/stdin', userInput + '\n'); // Redirect input to stdin
-        }
-
-        // Attach event listener for input field (Enter key submission)
-        document.getElementById('user-input').addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                const userInput = event.target.value;
-                processInput(userInput); // Process user input
-                event.target.value = ''; // Clear input field
+        // Configure the Module before loading connect4.js
+        Module = {
+            onRuntimeInitialized: () => {
+                console.log("Emscripten runtime initialized.");
+                FS.init(); // Initialize the file system (stdin, stdout, stderr)
+                Module.callMain(); // Start the game logic
+            },
+            print: (text) => appendToTerminal(text),
+            printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`),
+        };
+    </script>
+    <script src="connect4.js"></script>
+    <script>
+        // DOMContentLoaded to set up input event listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            function processInput(userInput) {
+                console.log("Processing user input:", userInput);
+                FS.writeFile('/dev/stdin', userInput + '\n'); // Redirect input to stdin
             }
-        });
 
-        // Attach event listener for submit button
-        document.getElementById('submit-btn').addEventListener('click', () => {
-            const userInput = document.getElementById('user-input').value;
-            processInput(userInput);
-            document.getElementById('user-input').value = ''; // Clear input field
+            document.getElementById('user-input').addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    const userInput = event.target.value;
+                    processInput(userInput);
+                    event.target.value = ''; // Clear input field
+                }
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', () => {
+                const userInput = document.getElementById('user-input').value;
+                processInput(userInput);
+                document.getElementById('user-input').value = ''; // Clear input field
+            });
         });
     </script>
 </body>
