@@ -46,8 +46,9 @@
         document.addEventListener("DOMContentLoaded", () => {
             function processInput(userInput) {
                 console.log("Processing user input:", userInput);
-                FS.writeFile('/dev/stdin', userInput + '\n'); // Redirect input to stdin
+                FS.writeFile('/dev/stdin', userInput + '\n'); // Write input to stdin
             }
+
 
             document.getElementById('user-input').addEventListener('keypress', (event) => {
                 if (event.key === 'Enter') {
