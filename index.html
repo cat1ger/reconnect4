@@ -7,50 +7,57 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Terminal-Styled Interface -->
     <div id="terminal"></div>
-    <input id="user-input" type="text" placeholder="Place your move..." />
+
+    <!-- Input Field and Submit Button -->
+    <input id="user-input" type="text" placeholder="Type your move..." />
     <button id="submit-btn">Submit</button>
 
+    <!-- JavaScript -->
     <script>
-        // Define the global appendToTerminal function
+        // Define a globally accessible appendToTerminal function
         function appendToTerminal(message) {
             const terminal = document.getElementById('terminal');
             terminal.innerHTML += `<div>${message}</div>`;
             terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
         }
 
-        // Configure the Module object
+        // Configure the Module object for Emscripten
         Module = {
             onRuntimeInitialized: () => {
                 console.log("Emscripten runtime initialized.");
-                Module._main(); // Start the game logic
+                Module.callMain(); // Start the C program (Connect4 game)
             },
-            print: (text) => appendToTerminal(text), // Redirect stdout
+            print: (text) => appendToTerminal(text), // Redirect stdout to terminal
             printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`), // Redirect stderr
         };
     </script>
+    <script src="connect4.js"></script> <!-- Load the Emscripten-generated JavaScript -->
     <script>
+        // Wait for the DOM to load before setting up input handling
         document.addEventListener("DOMContentLoaded", () => {
             function processInput(userInput) {
-                console.log("Processing input:", userInput);
+                console.log("Processing input:", userInput); // Debug log
                 FS.writeFile('/dev/stdin', userInput + '\n'); // Write input to stdin
             }
 
+            // Add event listener for pressing "Enter" in the input box
             document.getElementById('user-input').addEventListener('keypress', (event) => {
                 if (event.key === 'Enter') {
                     const userInput = event.target.value;
                     processInput(userInput);
-                    event.target.value = ''; // Clear input
+                    event.target.value = ''; // Clear input field after submission
                 }
             });
 
+            // Add event listener for the submit button
             document.getElementById('submit-btn').addEventListener('click', () => {
                 const userInput = document.getElementById('user-input').value;
                 processInput(userInput);
-                document.getElementById('user-input').value = ''; // Clear input
+                document.getElementById('user-input').value = ''; // Clear input field after submission
             });
         });
     </script>
-    <script src="connect4.js"></script>
 </body>
 </html>
