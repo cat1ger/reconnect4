@@ -3,59 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>reconnect4</title>
+    <title>Connect4 Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Terminal-Styled Interface -->
     <div id="terminal"></div>
-
-    <!-- Input Field and Submit Button -->
     <input id="user-input" type="text" placeholder="Type your move..." />
     <button id="submit-btn">Submit</button>
 
-    <!-- JavaScript -->
     <script>
-        // Define a globally accessible appendToTerminal function
         function appendToTerminal(message) {
             const terminal = document.getElementById('terminal');
             terminal.innerHTML += `<div>${message}</div>`;
             terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
         }
 
-        // Configure the Module object for Emscripten
         Module = {
             onRuntimeInitialized: () => {
                 console.log("Emscripten runtime initialized.");
-                Module.callMain(); // Start the C program (Connect4 game)
+                Module.callMain(); // Start the game logic
             },
             print: (text) => appendToTerminal(text), // Redirect stdout to terminal
             printErr: (text) => appendToTerminal(`<span style="color: red;">${text}</span>`), // Redirect stderr
         };
     </script>
-    <script src="connect4.js"></script> <!-- Load the Emscripten-generated JavaScript -->
+    <script src="connect4.js"></script>
     <script>
-        // Wait for the DOM to load before setting up input handling
         document.addEventListener("DOMContentLoaded", () => {
             function processInput(userInput) {
-                console.log("Processing input:", userInput); // Debug log
-                FS.writeFile('/dev/stdin', userInput + '\n'); // Write input to stdin
+                console.log("Processing input:", userInput);
+                FS.writeFile('/dev/stdin', userInput + '\n'); // Write to stdin
             }
 
-            // Add event listener for pressing "Enter" in the input box
             document.getElementById('user-input').addEventListener('keypress', (event) => {
                 if (event.key === 'Enter') {
                     const userInput = event.target.value;
                     processInput(userInput);
-                    event.target.value = ''; // Clear input field after submission
+                    event.target.value = ''; // Clear input field
                 }
             });
 
-            // Add event listener for the submit button
             document.getElementById('submit-btn').addEventListener('click', () => {
                 const userInput = document.getElementById('user-input').value;
                 processInput(userInput);
-                document.getElementById('user-input').value = ''; // Clear input field after submission
+                document.getElementById('user-input').value = ''; // Clear input field
             });
         });
     </script>
