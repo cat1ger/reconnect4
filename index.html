@@ -27,7 +27,7 @@
         Module = {
             onRuntimeInitialized: () => {
                 console.log("Emscripten runtime initialized.");
-                Module.callMain(); // Start the game logic
+                Module._main(); // Start the game logic
             },
             print: (text) => {
                 console.log("Printing to terminal:", text); // Debug log
